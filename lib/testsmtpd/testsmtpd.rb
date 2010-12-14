@@ -1,7 +1,24 @@
 require 'gserver'
 
+# This class implements a very simple SMTP server which
+# accepts all mails and calls callback block on each incoming mail.
+#
+# @example
+#  server = TestSmtpd.new(:port => 1025, :host => "localhost", :debug => true) do |msg|
+#    puts "Mail recieved: #{msg}"
+#  end
+#  server.start
+#  server.join
 class TestSmtpd < GServer
 
+  # Create a new TestSmtpd server. Listens on localhost port 1025
+  # by default. These defaults can be overridden by passing an option
+  # hash as first parameter.
+  #
+  # @option options [Integer] port (1025) The tcp port to listen to
+  # @option options [String] host ('127.0.0.1') The hostname or ip address to listen to
+  # @option options [boolean] debug (false) Set to true to turn debug output on
+  # @option options [Integer] max_connections (4) Maximum number of concurrent connections
   def initialize(options = {}, &message_handler)
     opts = {
       :port => 1025,
