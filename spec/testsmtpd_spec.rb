@@ -38,5 +38,14 @@ describe TestSmtpd do
     testmsg.should_not be_nil
     Mail.new(testmsg).should eq mail
   end
+
+  it "should listen to a custom port given in options hash" do
+    s = TestSmtpd.new(:port => 2525) { }
+    s.start
+    GServer.in_service?(1025).should be_false
+    GServer.in_service?(2525).should be_true
+    s.stop
+    s.join
+  end
 end
 

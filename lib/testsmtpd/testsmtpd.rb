@@ -3,7 +3,13 @@ require 'gserver'
 class TestSmtpd < GServer
 
   def initialize(options = {}, &message_handler)
-    super(1025, "127.0.0.1")
+    opts = {
+      :port => 1025,
+      :host => "127.0.0.1",
+      :max_connections => 4,
+      :debug => false
+    }.merge(options)
+    super(opts[:port], opts[:host], opts[:max_connections], $stderr, opts[:debug], opts[:debug])
     @message_handler = message_handler
   end
 
