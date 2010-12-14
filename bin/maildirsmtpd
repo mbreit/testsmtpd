@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+
+$: << File.join(File.dirname(__FILE__), '..', 'lib')
+require 'testsmtpd'
+
+require 'optparse'
+require 'mail'
+require 'maildir'
+
+raise "Please provide a maildir path" unless ARGV[0]
+@maildir = Maildir.new(ARGV[0])
+s = TestSmtpd.new do |msg|
+  mail = Mail.new(msg)
+  puts "Mail recieved: #{mail.subject}"
+  @maildir.add mail
+end
+s.start
+
+s.join
+
