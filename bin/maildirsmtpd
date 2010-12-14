@@ -7,8 +7,38 @@ require 'optparse'
 require 'mail'
 require 'maildir'
 
-raise "Please provide a maildir path" unless ARGV[0]
-@maildir = Maildir.new(ARGV[0])
+
+options = {}
+opts = OptionParser.new do |opts|
+  opts.banner = "Usage: maildirsmtpd [options] maildir"
+
+  opts.on("-p", "--port PORT", Integer, "Listen on port PORT") do |v|
+    options[:port] = v
+  end
+
+  opts.on("-h", "--host HOST", "Listen on host HOST") do |v|
+    options[:host] = v
+  end
+
+  opts.on("-d", "--[no-]debug", "Turn on debugging messages") do
+    options[:debug] = true
+  end
+
+  opts.on_tail("-h", "--help", "Show this message") do
+    puts opts
+    exit
+  end
+end
+opts.parse!
+
+if ARGV.size != 1
+  puts opts
+  exit
+end
+
+dir = ARGV[0]
+
+@maildir = Maildir.new(dir)
 s = TestSmtpd.new do |msg|
   mail = Mail.new(msg)
   puts "Mail recieved: #{mail.subject}"
