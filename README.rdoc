@@ -5,6 +5,32 @@ can be used to test email delivery of your software projects.
 
 This project is in very early development stage.
 
+== Using maildirsmtpd
+
+maildirsmtpd is a small command line tool which starts
+an smtp server on port 1025 (can be overridden by the --port option)
+and writes all incoming mails to the specified directory in the
+maildir format.
+
+  Usage: maildirsmtpd [options] maildir
+    -p, --port PORT                  Listen on port PORT
+    -h, --host HOST                  Listen on host HOST
+    -d, --[no-]debug                 Turn on debugging messages
+        --help                       Show this message
+
+
+== Using as a library
+
+=== Example
+This example starts a simple smtp server which
+accepts all mails and dumps them to stdout.
+
+  server = TestSmtpd.new(:port => 1025, :host => "localhost", :debug => true) do |msg|
+    puts "Mail recieved: #{msg}"
+  end
+  server.start
+  server.join
+
 == Contributing to testsmtpd
 
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
